@@ -4,6 +4,7 @@ import io.kotest.assertions.throwables.shouldThrowAny
 import io.kotest.core.spec.style.DescribeSpec
 import io.kotest.matchers.booleans.shouldBeFalse
 import io.kotest.matchers.booleans.shouldBeTrue
+import io.kotest.matchers.collections.shouldContain
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.types.shouldBeInstanceOf
 import ar.edu.unahur.obj2.vendedores.CentroDeDistribucion as CentroDeDistribucion
@@ -64,40 +65,36 @@ class VendedorTest : DescribeSpec({
     val vendedorFijo = VendedorFijo(tilcara)
     val viajante = Viajante(listOf(jujuy))
 
-    describe("Vendedor fijo no es influyente"){
+
       it("Un vendedor nunca es influyente"){
         vendedorFijo.esInfluyente().shouldBeFalse()
       }
-    }
 
-    describe("Viajante no es influyente"){
       it("vendedor viajante no es influyente ya que esta habilitado solo en jujuy"){
         viajante.esInfluyente().shouldBeFalse()
       }
-    }
+
   }
 
 
   describe("Comercio corresponsal es influyente"){
 
 
-    describe("Comercio corresponsal 1"){
       it("Comercio corresponsal con 5 ciudades es influyente"){
         corresponsal.esInfluyente().shouldBeTrue()
       }
-    }
 
-    describe("Comercio corresponsal 2"){
       it("comercio corresponsal con 3 ciudades no es influyente"){
         corresponsal2.esInfluyente().shouldBeFalse()
       }
-    }
+
   }
 
 
   describe("vendedor fijo test funcion esVersatil() y test funcion esFirme"){
       val vendedorFijo = VendedorFijo(sanIgnacio)
       vendedorFijo.agregarCertificacion(certificacion1)
+
     it("Vendedor fijo no es versatil ya que tiene solo una certificacion"){
       vendedorFijo.esVersatil().shouldBeFalse()
     }
@@ -120,8 +117,6 @@ class VendedorTest : DescribeSpec({
 
 
 
-
-
   describe("Centro De Distribucion"){
     val catamarca = Provincia(396895)
     val tinogasta = Ciudad(catamarca)
@@ -137,30 +132,30 @@ class VendedorTest : DescribeSpec({
     viajante.agregarCertificacion(certificacion3)
     corresponsal.agregarCertificacion(certificacion1)
 
+    print(centroDeDistribucion.vendedores)
+
+
+    it("test vendedor estrella"){
+      centroDeDistribucion.vendedorEstrella().shouldBe(viajante)
+    }
+
+
     it("test agregar funcion(error)"){
       shouldThrowAny{
         centroDeDistribucion.agregarVendedor(vendedorFijo)
       }
     }
+    it("test puede cubrir"){
+      centroDeDistribucion.puedeCubrir(sanIgnacio)
+    }
 
-//    it("test vendedor estrella"){
-//      centroDeDistribucion.vendedorEstrella().shouldBe
-//    }
-
-//    it("test puede cubrir"){
-//      centroDeDistribucion.puedeCubrir(sanIgnacio)
-//    }
-
-//    it("vendedores genericos"){
-//      centroDeDistribucion.vendedoresGenericos().should
-//    }
+    it("vendedores genericos, vendedorFijo tiene certificacion que no es de producto"){
+      centroDeDistribucion.vendedoresGenericos().shouldContain(vendedorFijo)
+    }
 
 
-//    it("esRobusto"){}
-
-
+    it("test esRobusto es falso"){
+      centroDeDistribucion.esRobusto().shouldBeFalse()
+    }
   }
-
-
-
 })
